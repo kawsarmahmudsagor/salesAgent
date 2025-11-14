@@ -52,7 +52,7 @@ class Product(Base):
     category = relationship("Category", back_populates="products")
 
     inventory_items = relationship("Inventory", back_populates="product")
-    cart_items = relationship("CartItem", back_populates="product")
+    cart_items = relationship("Cart", back_populates="product")
     order_items = relationship("OrderItem", back_populates="product")
 
 
@@ -80,28 +80,20 @@ class User(Base):
     contact_no = Column(String, nullable=False)  
     picture = Column(String, nullable=True)
 
-    cart = relationship("Cart", uselist=False, back_populates="user")
+    cart = relationship("Cart", back_populates="user")
     orders = relationship("Order", back_populates="user")
     transactions = relationship("ProductTransaction", back_populates="user")
 
-# CART Table
+
 class Cart(Base):
-    __tablename__ = "carts"
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), unique=True)  # one active cart per user
-
-    user = relationship("User", back_populates="cart")
-    items = relationship("CartItem", back_populates="cart", cascade="all, delete-orphan")
-
-class CartItem(Base):
     __tablename__ = "cart_items"
     id = Column(Integer, primary_key=True, index=True)
-    cart_id = Column(Integer, ForeignKey("carts.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
     quantity = Column(Integer, default=1)
     status = Column(String, default="active")  # active/removed/saved
 
-    cart = relationship("Cart", back_populates="items")
+    user = relationship("User", back_populates="cart")
     product = relationship("Product", back_populates="cart_items")
 
 # ORDER Table

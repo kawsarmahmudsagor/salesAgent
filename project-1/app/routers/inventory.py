@@ -9,13 +9,14 @@ from ..auth import get_current_user
 router = APIRouter()
 
 @router.post("/", response_model=schemas.InventoryRead)
-def create_inventory(inventory_in: schemas.InventoryCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+def create_inventory(inv_in: schemas.InventoryCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     # Optionally validate product exists
-    product = crud.get_product(db, inventory_in.product_id)
-    if not product:
+    p = crud.get_product(db, inv_in.product_id)
+    if not p:
         raise HTTPException(status_code=404, detail="Product not found")
-    return crud.create_inventory(db, inventory_in)
+    return crud.create_inventory(db, inv_in)
 
 @router.get("/product/{product_id}", response_model=List[schemas.InventoryRead])
-def list_of_inventory(product_id: int, db: Session = Depends(get_db)):
-    return crud.list_of_inventory_for_product(db, product_id)
+def list_inventory(product_id: int, db: Session = Depends(get_db)):
+    return crud.list_inventory_for_product(db, product_id)
+
