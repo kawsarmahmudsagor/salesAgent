@@ -6,7 +6,7 @@ from .. import schemas, crud, models
 from ..database import get_db
 from ..auth import get_current_user
 
-router = APIRouter()
+router = APIRouter(tags=["inventory"])
 
 @router.post("/", response_model=schemas.InventoryRead)
 def create_inventory(inv_in: schemas.InventoryCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):

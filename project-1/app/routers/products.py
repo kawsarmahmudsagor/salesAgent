@@ -5,7 +5,7 @@ from .. import crud, models, schemas
 from ..database import get_db
 from ..auth import get_current_user
 
-router = APIRouter(prefix="/products", tags=["Products"])
+router = APIRouter(tags=["Products"])
 
 # Get all products with optional filters
 @router.get("/", response_model=List[schemas.ProductRead])

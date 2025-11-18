@@ -5,7 +5,7 @@ from .. import crud, models, schemas
 from ..database import get_db
 from ..auth import get_current_user
 
-router = APIRouter(prefix="/cart", tags=["Cart"])
+router = APIRouter(tags=["Cart"])
 
 @router.post("/", response_model=schemas.CartRead)
 def add_cart_item(product_id: int, quantity: int = 1, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):

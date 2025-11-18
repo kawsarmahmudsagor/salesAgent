@@ -5,7 +5,7 @@ from .. import models, schemas
 from ..database import get_db
 from ..auth import get_current_user
 
-router = APIRouter(prefix="/orders", tags=["Orders"])
+router = APIRouter(tags=["Orders"])
 
 @router.get("/", response_model=List[schemas.OrderRead])
 def get_user_orders(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
