@@ -56,17 +56,26 @@ def clear_cart(db: Session, user_id: int):
 
 # ----------------- ORDERS -----------------
 def create_order(db: Session, user_id: int, user_address: str, items: List[models.Cart]):
-    total_amount = sum([item.product.price * item.quantity for item in items])
+    # Calculate total using discounted price
+    total_amount = sum([item.product.final_price * item.quantity for item in items])
+
+    # Create the order
     order = models.Order(user_id=user_id, total_amount=total_amount, user_address=user_address)
     db.add(order)
     db.commit()
     db.refresh(order)
 
+    # Add order items
     for item in items:
-        order_item = models.OrderItem(order_id=order.id, product_id=item.product_id, quantity=item.quantity)
+        order_item = models.OrderItem(
+            order_id=order.id,
+            product_id=item.product_id,
+            quantity=item.quantity
+        )
         db.add(order_item)
     db.commit()
     return order
+
 
 # ----------------- TRANSACTIONS -----------------
 def create_transaction(db: Session, user_id: int, order_id: int, trn_amount: float, created_by: str):

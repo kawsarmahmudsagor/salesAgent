@@ -30,6 +30,7 @@ class ProductBase(BaseModel):
     name: str
     details: Optional[str]
     price: float
+    discount: Optional[float]
     picture: Optional[str]
     company_id: Optional[int]
     product_type_id: Optional[int]

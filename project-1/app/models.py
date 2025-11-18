@@ -42,6 +42,7 @@ class Product(Base):
     name = Column(String, nullable=False)
     details = Column(Text)
     price = Column(Float, nullable=False, default=0.0)
+    discount = Column(Float, nullable=True, default=0.0)
     picture = Column(String, nullable=True) #picture optional field, can be adjusted later
     company_id = Column(Integer, ForeignKey("companies.id"), nullable=True)
     product_type_id = Column(Integer, ForeignKey("product_types.id"), nullable=True)
@@ -54,6 +55,10 @@ class Product(Base):
     inventory_items = relationship("Inventory", back_populates="product")
     cart_items = relationship("Cart", back_populates="product")
     order_items = relationship("OrderItem", back_populates="product")
+
+    @property
+    def final_price(self):
+        return self.price * (1 - self.discount / 100)
 
 
 
