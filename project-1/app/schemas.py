@@ -25,12 +25,61 @@ class UserRead(UserBase):
     class Config:
         orm_mode = True
 
+# ---------- COMPANY ----------
+class CompanyBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+
+class CompanyCreate(CompanyBase):
+    pass
+
+class CompanyUpdate(CompanyBase):
+    pass
+
+class CompanyRead(CompanyBase):
+    id: int
+    class Config:
+        orm_mode = True
+
+# ---------- CATEGORY ----------
+class CategoryBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+
+class CategoryCreate(CategoryBase):
+    pass
+
+class CategoryUpdate(CategoryBase):
+    pass
+
+class CategoryRead(CategoryBase):
+    id: int
+    class Config:
+        orm_mode = True
+
+# ---------- PRODUCT TYPE ----------
+class ProductTypeBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+
+class ProductTypeCreate(ProductTypeBase):
+    pass
+
+class ProductTypeUpdate(ProductTypeBase):
+    pass
+
+class ProductTypeRead(ProductTypeBase):
+    id: int
+    class Config:
+        orm_mode = True
+
 # ---------- PRODUCT ----------
 class ProductBase(BaseModel):
     name: str
     details: Optional[str]
+    size: int
     price: float
-    discount: Optional[float]
+    discount: Optional[float] = 0.0
     picture: Optional[str] = None
     company_id: Optional[int]
     product_type_id: Optional[int]
@@ -45,14 +94,26 @@ class ProductRead(ProductBase):
         orm_mode = True
 
 # ---------- INVENTORY ----------
-class InventoryCreate(BaseModel):
+class InventoryBase(BaseModel):
     product_id: int
     color: Optional[str] = None
-    size: Optional[str] = None
     quantity: int = 0
 
-class InventoryRead(InventoryCreate):
+class InventoryCreate(InventoryBase):
+    pass
+
+class InventoryRead(InventoryBase):
     id: int
+    product: ProductRead
+    class Config:
+        orm_mode = True
+
+class InventoryDeleteRead(BaseModel):
+    id: int
+    product_id: int
+    color: Optional[str] = None
+    quantity: int = 0
+
     class Config:
         orm_mode = True
 

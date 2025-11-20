@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+import numpy as np
 from typing import List, Optional
 
 def keyword_search_policy(session, query: str, limit: int = 3):
@@ -35,7 +36,7 @@ def generate_embedding_google(text: str, model: str = "textembedding-gecko-001")
         return None
 
 def embedding_retrieve(session, query_embedding, top_k=3):
-    import numpy as np
+    
     rows = session.execute(
         "SELECT id, title, body, embedding_vector FROM policy_documents WHERE embedding_vector IS NOT NULL"
     ).fetchall()
