@@ -69,7 +69,6 @@ class Inventory(Base):
     id = Column(Integer, primary_key=True, index=True)
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
     color = Column(String, nullable=True)
-    
     quantity = Column(Integer, default=0)
 
     product = relationship("Product", back_populates="inventory_items")
@@ -89,6 +88,19 @@ class User(Base):
     cart = relationship("Cart", back_populates="user")
     orders = relationship("Order", back_populates="user")
     transactions = relationship("ProductTransaction", back_populates="user")
+    conversations = relationship("ConversationHistory", back_populates="user")
+
+#--------------Chatbot----------------
+
+class ConversationHistory(Base):
+    __tablename__ = "conversation_history"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    history = Column(Text, default="")
+
+    # Each conversation belongs to a single user
+    user = relationship("User", back_populates="conversations")
 
 # ---------- CART ----------
 class Cart(Base):

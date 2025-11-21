@@ -12,9 +12,10 @@ from .routers import (
     cart,
     orders,
     transactions,
-    auth
+    auth,
+    chatbot_route,
 )
-from app.chatbot.router import router as chatbot_router
+
 
 # Create tables (use Alembic for production migrations)
 models.Base.metadata.create_all(bind=engine)
@@ -33,7 +34,8 @@ api.include_router(cart.router, prefix="/cart", tags=["Cart"])
 api.include_router(orders.router, prefix="/orders", tags=["Orders"])
 api.include_router(transactions.router, prefix="/transactions", tags=["Transactions"])
 api.include_router(auth.router, prefix="/auth", tags=["Auth"])
-api.include_router(chatbot_router, prefix="/chatbot", tags=["Chatbot"])
+api.include_router(chatbot_route.router, prefix="/chatbot", tags=["Chatbot"])
+
 
 # Mount uploads folder for serving static files
 api.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
