@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from ..database import get_db
-from ..auth import get_current_user
+from ..auth import get_current_user, get_current_admin
 from .. import chatbot, models
 from pydantic import BaseModel
 
@@ -26,6 +26,42 @@ def chatbot_interaction(
 
     if not conversation:
         conversation = models.ConversationHistory(user_id=current_user.id, history="")
+        db.add(conversation)
+        db.commit()
+        db.refresh(conversation)
+
+    # Use the conversation history
+    history = conversation.history
+
+    # Generate AI reply and updated history
+    ai_reply, updated_history = chatbot.handle_conversation(history, request.message)
+
+    # Save updated conversation
+    conversation.history = updated_history
+    db.commit()
+
+    return {
+        "response": ai_reply,
+        "conversation_id": conversation.id
+    }
+
+
+@router.post("/admin")
+def chatbot_interaction_admin(
+    request: ChatRequest,
+    db: Session = Depends(get_db),
+    current_admin: models.Admin = Depends(get_current_admin)
+):
+    # Load last conversation for this user, or create new
+    conversation = (
+        db.query(models.ConversationHistory)
+        .filter(models.ConversationHistory.admin_id == current_admin.id)
+        .order_by(models.ConversationHistory.id.desc())
+        .first()
+    )
+
+    if not conversation:
+        conversation = models.ConversationHistory(admin_id=current_admin.id, history="")
         db.add(conversation)
         db.commit()
         db.refresh(conversation)

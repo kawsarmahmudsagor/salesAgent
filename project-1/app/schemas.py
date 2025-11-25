@@ -18,10 +18,11 @@ class UserBase(BaseModel):
     contact_no: str
 
 class UserCreate(UserBase):
-    password: str
+    password: str  # password required when creating a user
 
 class UserRead(UserBase):
     id: int
+   
     class Config:
         orm_mode = True
 
@@ -172,5 +173,35 @@ class ProductTransactionRead(ProductTransactionBase):
     class Config:
         orm_mode = True
 
+#--------------Admin--------------
+class AdminBase(BaseModel):
+    email: EmailStr
+    name: str
+    role: str
+
+class AdminCreate(AdminBase):
+    password: str  # password required when creating a user
+
+class AdminRead(AdminBase):
+    id: int
+   
+    class Config:
+        orm_mode = True
+
+#---------------Document----------
+class DocumentBase(BaseModel):
+    title: str
+    summary: str
+    tags: str
+    uploaded_by_id: int
+
+class DocumentCreate(DocumentBase):
+    pass
+
+class DocumentRead(DocumentBase):
+    id: int
+    uploaded_by: AdminRead
+    class Config:
+        orm_mode = True
 
 

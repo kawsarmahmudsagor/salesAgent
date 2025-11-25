@@ -79,6 +79,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
+    
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=True)
     address = Column(Text, nullable=False)
@@ -97,10 +98,12 @@ class ConversationHistory(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
+    admin_id = Column(Integer, ForeignKey("admins.id"))
     history = Column(Text, default="")
 
     # Each conversation belongs to a single user
     user = relationship("User", back_populates="conversations")
+    admin = relationship("Admin", back_populates="conversations")
 
 # ---------- CART ----------
 class Cart(Base):
@@ -155,3 +158,27 @@ class ProductTransaction(Base):
 
     order = relationship("Order", back_populates="transactions")
     user = relationship("User", back_populates="transactions")
+
+
+#--------------ADMIN--------------
+class Admin(Base):
+    __tablename__ = "admins"
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)
+    email = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    role = Column(String, nullable=False)
+    
+    documents = relationship("Document", back_populates="uploaded_by")
+    conversations = relationship("ConversationHistory", back_populates="admin")
+
+
+class Document(Base):
+    __tablename__ = "documents"
+    id = Column(Integer, primary_key=True)
+    title = Column(String, nullable=False)
+    summary = Column(Text, nullable=False)
+    tags = Column(String, nullable=False)
+    uploaded_by_id = Column(Integer, ForeignKey("admins.id"), nullable=False)
+
+    uploaded_by = relationship("Admin", back_populates="documents")

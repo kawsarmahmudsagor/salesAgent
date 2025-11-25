@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 from .. import crud, models, schemas
 from ..database import get_db
-from ..auth import get_current_user
+from ..auth import get_current_user, get_current_admin
 import os
 import shutil
 
@@ -52,7 +52,7 @@ def add_product(
     picture: Optional[UploadFile] = File(None),
 
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_user)
+    current_admin: models.Admin = Depends(get_current_admin)
 ):
     # Handle picture upload
     picture_path = None
@@ -84,7 +84,7 @@ def add_product(
 def remove_product(
     product_id: int,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_user)
+    current_admin: models.Admin = Depends(get_current_admin)
 ):
     product = crud.delete_product(db, product_id)
     if not product:

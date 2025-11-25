@@ -16,7 +16,9 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 # ---------------- PASSWORD -----------------
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
+oauth2_scheme_user = OAuth2PasswordBearer(tokenUrl="/auth/user/token")
+oauth2_scheme_admin = OAuth2PasswordBearer(tokenUrl="/auth/admin/token")
+
 
 def get_password_hash(password: str):
     # truncate to 72 characters to avoid bcrypt limitation
@@ -29,7 +31,12 @@ def verify_password(plain_password, hashed_password):
 
 # ---------------- USER -----------------
 def get_user(db: Session, email: str):
-    return db.query(models.User).filter(models.User.email == email).first()
+    query = db.query(models.User).filter(models.User.email == email)
+    return query.first()
+
+def get_admin(db: Session, email: str):
+    query = db.query(models.Admin).filter(models.Admin.email == email)
+    return query.first()
 
 def authenticate_user(db: Session, email: str, password: str):
     user = get_user(db, email)
@@ -39,6 +46,14 @@ def authenticate_user(db: Session, email: str, password: str):
         return False
     return user
 
+def authenticate_admin(db: Session, email: str, password: str):
+    admin = get_admin(db, email)
+    if not admin:
+        return False
+    if not verify_password(password, admin.hashed_password):
+        return False
+    return admin
+
 # ---------------- JWT TOKEN -----------------
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     to_encode = data.copy()
@@ -47,7 +62,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+def get_current_user(token: str = Depends(oauth2_scheme_user), db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -56,6 +71,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get("sub")
+        
         if email is None:
             raise credentials_exception
     except JWTError:
@@ -64,3 +80,24 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     if user is None:
         raise credentials_exception
     return user
+
+
+def get_current_admin(token: str = Depends(oauth2_scheme_admin), db: Session = Depends(get_db)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        
+        if email is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    admin = get_admin(db, email=email)
+    if admin is None:
+        raise credentials_exception
+    return admin
+

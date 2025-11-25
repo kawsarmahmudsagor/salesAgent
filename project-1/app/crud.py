@@ -226,3 +226,27 @@ def create_transaction(db: Session, user_id: int, order_id: int, trn_amount: flo
     db.commit()
     db.refresh(transaction)
     return transaction
+
+
+def get_documents(db: Session)->List[models.Document]:
+    return db.query(models.Document).all()
+
+def create_document(db: Session, document: schemas.DocumentCreate) -> models.Document:
+    db_document = models.Document(
+        title=document.title,              
+        summary=document.summary,
+        tags=document.tags,
+        uploaded_by_id=document.uploaded_by_id 
+    )
+    db.add(db_document)
+    db.commit()
+    db.refresh(db_document)
+    return db_document
+
+def delete_document(db: Session, document_id: int) -> bool:
+    db_document = db.query(models.Document).filter(models.Document.id == document_id).first()
+    if not db_document:
+        return False
+    db.delete(db_document)
+    db.commit()
+    return True

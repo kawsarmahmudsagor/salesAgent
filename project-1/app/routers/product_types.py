@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from .. import crud, models, schemas
 from ..database import get_db
-from ..auth import get_current_user
+from ..auth import get_current_user, get_current_admin
 
 router = APIRouter(tags=["Product-Types"])
 
@@ -22,12 +22,12 @@ def get_product_type(product_type_id: int, db: Session = Depends(get_db)):
 
 # Create product type
 @router.post("/", response_model=schemas.ProductTypeRead)
-def add_product_type(product_type: schemas.ProductTypeCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+def add_product_type(product_type: schemas.ProductTypeCreate, db: Session = Depends(get_db), current_admin: models.Admin = Depends(get_current_admin)):
     return crud.create_product_type(db, product_type)
 
 # Update product type
 @router.put("/{product_type_id}", response_model=schemas.ProductTypeRead)
-def update_product_type(product_type_id: int, product_type: schemas.ProductTypeUpdate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+def update_product_type(product_type_id: int, product_type: schemas.ProductTypeUpdate, db: Session = Depends(get_db), current_admin: models.Admin = Depends(get_current_admin)):
     updated_ptype = crud.update_product_type(db, product_type_id, product_type)
     if not updated_ptype:
         raise HTTPException(status_code=404, detail="Product type not found")
@@ -35,7 +35,7 @@ def update_product_type(product_type_id: int, product_type: schemas.ProductTypeU
 
 # Delete product type
 @router.delete("/{product_type_id}", response_model=schemas.ProductTypeRead)
-def remove_product_type(product_type_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+def remove_product_type(product_type_id: int, db: Session = Depends(get_db), current_admin: models.Admin = Depends(get_current_admin)):
     deleted_ptype = crud.delete_product_type(db, product_type_id)
     if not deleted_ptype:
         raise HTTPException(status_code=404, detail="Product type not found")

@@ -1,8 +1,16 @@
 from langchain.chat_models import init_chat_model
 from langchain_core.prompts import ChatPromptTemplate
 from dotenv import load_dotenv
+from . import rag
+import os
 
-load_dotenv()
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+load_dotenv(os.path.join(project_root, ".env"))
+
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+if not GOOGLE_API_KEY:
+    raise ValueError("GOOGLE_API_KEY not found in .env file")
+
 
 model = init_chat_model(
     model="google_genai:gemini-2.5-flash-lite",
@@ -16,13 +24,40 @@ prompt = ChatPromptTemplate.from_messages([
                "Proactively suggest products or promotions based on the user's previous interactions and purchase history. "
                "Anticipate the user's needs, ask clarifying questions politely, and make personalized recommendations. "
                "Keep conversations natural and engaging, as if the user is talking to a knowledgeable and personable sales expert."),
-    ("human", "{question}")
+    ("human", "Conversation so far:\n{history}\n\nNew question:\n{question}")
 ])
 
 chain = prompt | model
 
 def handle_conversation(history: str, question: str):
-    response = chain.invoke({"history": history, "question": question})
+    # 1. Get RAG context + metadata
+    rag_context, rag_metadata = rag.get_rag_context(question)
+
+    if rag_context:
+        # Include both context and metadata in the prompt
+        metadata_text = "\n".join([f"{m}" for m in rag_metadata])
+        full_question = (
+            f"Use the context below to answer the question accurately.\n\n"
+            f"CONTEXT:\n{rag_context}\n\n"
+            f"METADATA:\n{metadata_text}\n\n"
+            f"QUESTION:\n{question}"
+        )
+    else:
+        # No relevant context, avoid hallucination
+        full_question = (
+            f"No relevant company or product policy information was found.\n"
+            f"Answer based only on the user question if possible.\n\nQUESTION:\n{question}"
+        )
+
+    # 2. Pass to LLM with conversation history
+    response = chain.invoke({
+        "history": history,
+        "question": full_question
+    })
+
     ai_text = response.content
+
+    # 3. Update conversation history
     new_history = history + f"\nUser: {question}\nAI: {ai_text}"
+
     return ai_text, new_history

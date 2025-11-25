@@ -5,6 +5,7 @@ from . import models
 from .routers import (
     companies,
     users,
+    admin,
     categories,
     product_types,
     products,
@@ -14,6 +15,7 @@ from .routers import (
     transactions,
     auth,
     chatbot_route,
+    documents
 )
 
 
@@ -26,6 +28,8 @@ api = FastAPI(title="E-Commerce FastAPI")
 # Include routers
 api.include_router(companies.router, prefix="/companies", tags=["Companies"])
 api.include_router(users.router, prefix="/users", tags=["Users"])
+api.include_router(documents.router, prefix="/documents", tags=["Documents"])
+api.include_router(admin.router, prefix="/admins", tags=["Admins"])
 api.include_router(categories.router, prefix="/categories", tags=["Categories"])
 api.include_router(product_types.router, prefix="/product_types", tags=["Product-Types"])
 api.include_router(products.router, prefix="/products", tags=["Products"])
