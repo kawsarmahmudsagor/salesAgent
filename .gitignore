@@ -1,0 +1,28 @@
+# Python cache
+__pycache__/
+*.py[oc]
+
+# Build artifacts
+build/
+dist/
+wheels/
+*.egg-info
+
+# Ignore text files you don't want
+*.txt
+gitpublickey.txt
+
+# Virtual environments
+agentEnv/
+.venv/
+
+# Environment files
+.env
+project-1/.env
+
+# Ignore chatbot project folder inside salesAgent
+ecommerce-chatbot/
+
+# UV / Python version files
+uv.lock
+.python-version
