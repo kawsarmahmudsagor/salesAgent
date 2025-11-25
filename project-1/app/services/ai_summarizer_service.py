@@ -6,7 +6,7 @@ from google import genai
 from dotenv import load_dotenv
 from pathlib import Path
 import os
-from . import convert_to_text
+from helpers.convert_to_text import convert_to_txt
 
 env_path = Path(__file__).resolve().parent / ".env"
 load_dotenv(env_path)
@@ -60,7 +60,7 @@ prompt = ChatPromptTemplate.from_messages([
 chain = prompt | model
 
 def tags_generate_summarize_document(document_path) -> tuple[str, str]:
-    text = convert_to_text.convert_to_txt(document_path)
+    text = convert_to_txt(document_path)
     
     result = chain.invoke({"document": text})
     

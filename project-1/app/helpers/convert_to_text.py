@@ -1,8 +1,8 @@
 import os
 from pathlib import Path
 from PyPDF2 import PdfReader
-import docx  # pip install python-docx
-import textract  # pip install textract
+import docx  
+import textract 
 
 def pdf_to_text(file_path):
     reader = PdfReader(file_path)

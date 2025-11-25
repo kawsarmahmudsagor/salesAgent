@@ -1,7 +1,7 @@
 from langchain.chat_models import init_chat_model
 from langchain_core.prompts import ChatPromptTemplate
 from dotenv import load_dotenv
-from . import rag
+from rag_service import get_rag_context
 import os
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -30,8 +30,8 @@ prompt = ChatPromptTemplate.from_messages([
 chain = prompt | model
 
 def handle_conversation(history: str, question: str):
-    # 1. Get RAG context + metadata
-    rag_context, rag_metadata = rag.get_rag_context(question)
+    
+    rag_context, rag_metadata = get_rag_context(question)
 
     if rag_context:
         # Include both context and metadata in the prompt
@@ -43,13 +43,11 @@ def handle_conversation(history: str, question: str):
             f"QUESTION:\n{question}"
         )
     else:
-        # No relevant context, avoid hallucination
         full_question = (
             f"No relevant company or product policy information was found.\n"
             f"Answer based only on the user question if possible.\n\nQUESTION:\n{question}"
         )
 
-    # 2. Pass to LLM with conversation history
     response = chain.invoke({
         "history": history,
         "question": full_question
@@ -57,7 +55,6 @@ def handle_conversation(history: str, question: str):
 
     ai_text = response.content
 
-    # 3. Update conversation history
     new_history = history + f"\nUser: {question}\nAI: {ai_text}"
 
     return ai_text, new_history
