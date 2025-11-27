@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from ..database import get_db
-from ..auth import get_current_user, get_current_admin
+from config.database import get_db
+from services.auth_admin_service import get_current_admin
+from services.auth_user_service import get_current_user
 from services.chatbot_service import handle_conversation
 from models.user import User
 from models.admin import Admin

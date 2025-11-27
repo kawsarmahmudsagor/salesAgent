@@ -1,34 +1,36 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from .. import models, schemas, auth
-from ..database import get_db
+from config.database import get_db
+from models.user import User
+from schemas.user import UserCreate, UserRead
+from services.auth_user_service import get_current_user, get_password_hash
 
 router = APIRouter(tags=["Users"])
 
-@router.post("/", response_model=schemas.UserRead)
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = db.query(models.User).filter(models.User.email == user.email).first()
+@router.post("/", response_model=UserRead)
+def create_user(user: UserCreate, db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.email == user.email).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
-    hashed_password = auth.get_password_hash(user.password)
-    new_user = models.User(**user.dict(exclude={"password"}), hashed_password=hashed_password)
+    hashed_password = get_password_hash(user.password)
+    new_user = User(**user.dict(exclude={"password"}), hashed_password=hashed_password)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     return new_user
 
 
-@router.get("/me", response_model=schemas.UserRead)
-def read_current_user(current_user: models.User = Depends(auth.get_current_user)):
+@router.get("/me", response_model= UserRead)
+def read_current_user(current_user: User = Depends(get_current_user)):
     return current_user
 
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(
     user_id: int,
-    current_user: models.User = Depends(auth.get_current_user),
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    user = db.query(models.User).filter(models.User.id == user_id).first()
+    user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 

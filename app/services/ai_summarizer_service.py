@@ -1,7 +1,6 @@
 from langchain.chat_models import init_chat_model
 from PyPDF2 import PdfReader
 from langchain_core.prompts import ChatPromptTemplate
-
 from google import genai
 from dotenv import load_dotenv
 from pathlib import Path
@@ -53,7 +52,7 @@ prompt = ChatPromptTemplate.from_messages([
     - First, the summary (paragraph or bullet points).
     - Then, a line labeled `Tags:` followed by the comma-separated hashtags.
     """),
-    ("human", "{document}")   # required for Gemini API
+    ("human", "{document}")   
 ])
 
 

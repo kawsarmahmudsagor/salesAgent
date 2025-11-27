@@ -1,8 +1,24 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from .database import engine
-from . import models
-from .routers import (
+from app.config.database import engine, Base
+
+from app.models import (
+    admin,
+    user,
+    cart,
+    category,
+    company,
+    conversation_history,
+    documents,
+    inventory,
+    order,
+    order_item,
+    product,
+    product_transaction,
+    product_type   
+)
+
+from app.routers import (
     companies,
     users,
     admin,
@@ -20,7 +36,7 @@ from .routers import (
 
 
 # Create tables (use Alembic for production migrations)
-models.Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 # Initialize FastAPI app
 api = FastAPI(title="E-Commerce FastAPI")

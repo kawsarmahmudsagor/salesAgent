@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
 from pathlib import Path
 from typing import List
-from .. import crud
+from crud.document import get_documents, delete_document, create_document
 from models.admin import Admin
 from schemas.document import DocumentCreate, DocumentRead
 from services import ai_summarizer_service, auth_admin_service
@@ -19,7 +19,7 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 @router.get("/view", response_model=List[DocumentRead])
 def view_documents(db: Session = Depends(get_db), current_admin: Admin = Depends(auth_admin_service.get_current_admin)):
-    return crud.get_documents(db)
+    return get_documents(db)
 
 @router.post("/preview", response_model=DocumentCreate)
 def preview_document(
@@ -64,7 +64,7 @@ def save_document(
         tags=tags,        
         uploaded_by_id=current_admin.id
     )
-    db_document = crud.create_document(db, document_data)
+    db_document = create_document(db, document_data)
     return db_document
 
 
@@ -74,7 +74,7 @@ def delete_document(
     db: Session = Depends(get_db),
     current_admin: Admin = Depends(auth_admin_service.get_current_admin)
 ):
-    success = crud.delete_document(db, document_id)
+    success = delete_document(db, document_id)
     if not success:
         raise HTTPException(status_code=404, detail="Document not found")
     return {"detail": "Document deleted successfully"}

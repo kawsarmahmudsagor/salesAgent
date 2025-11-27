@@ -1,9 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 from typing import List, Optional
-from .. import crud, models, schemas
-from ..database import get_db
-from ..auth import get_current_user, get_current_admin
+from schemas.product import ProductRead, ProductCreate
+from models.admin import Admin
+from config.database import get_db
+from crud.product import get_product, get_products, create_product, delete_product
+from services.auth_admin_service import get_current_admin
 import os
 import shutil
 
@@ -11,7 +13,7 @@ import shutil
 router = APIRouter(tags=["Products"])
 
 # Get all products with optional filters
-@router.get("/", response_model=List[schemas.ProductRead])
+@router.get("/", response_model=List[ProductRead])
 def view_products(
     size: Optional[str] = None,
     color: Optional[str] = None,
@@ -20,7 +22,7 @@ def view_products(
     company_id: Optional[int] = None,  
     db: Session = Depends(get_db)
 ):
-    return crud.get_products(
+    return get_products(
         db, 
         size=size, 
         color=color, 
@@ -31,15 +33,15 @@ def view_products(
 
 
 # Get single product by ID
-@router.get("/{product_id}", response_model=schemas.ProductRead)
+@router.get("/{product_id}", response_model=ProductRead)
 def get_product(product_id: int, db: Session = Depends(get_db)):
-    product = crud.get_product(db, product_id)
+    product = get_product(db, product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
     return product
 
 # Add a new product
-@router.post("/", response_model=schemas.ProductRead)
+@router.post("/", response_model=ProductRead)
 def add_product(
     name: str,
     price: float,
@@ -52,7 +54,7 @@ def add_product(
     picture: Optional[UploadFile] = File(None),
 
     db: Session = Depends(get_db),
-    current_admin: models.Admin = Depends(get_current_admin)
+    current_admin: Admin = Depends(get_current_admin)
 ):
     # Handle picture upload
     picture_path = None
@@ -64,7 +66,7 @@ def add_product(
         with open(picture_path, "wb") as buffer:
             shutil.copyfileobj(picture.file, buffer)
 
-    product_data = schemas.ProductCreate(
+    product_data = ProductCreate(
         name=name,
         size=size,
         price=price,
@@ -76,17 +78,17 @@ def add_product(
         category_id=category_id
     )
 
-    return crud.create_product(db, product_data)
+    return create_product(db, product_data)
 
 
 # Delete a product
-@router.delete("/{product_id}", response_model=schemas.ProductRead)
+@router.delete("/{product_id}", response_model=ProductRead)
 def remove_product(
     product_id: int,
     db: Session = Depends(get_db),
-    current_admin: models.Admin = Depends(get_current_admin)
+    current_admin: Admin = Depends(get_current_admin)
 ):
-    product = crud.delete_product(db, product_id)
+    product = delete_product(db, product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
     return product
