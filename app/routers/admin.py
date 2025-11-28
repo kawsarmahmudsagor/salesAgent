@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from models.admin import Admin
-from schemas.admin import AdminRead, AdminCreate
-from services.auth_admin_service import get_current_admin, get_password_hash
-from config.database import get_db
+from app.models.admin import Admin
+from app.schemas.admin import AdminRead, AdminCreate
+from app.services.auth_admin_service import get_current_admin, get_password_hash
+from app.config.database import get_db
 
 
 

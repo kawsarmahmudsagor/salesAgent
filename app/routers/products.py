@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 from typing import List, Optional
-from schemas.product import ProductRead, ProductCreate
-from models.admin import Admin
-from config.database import get_db
-from crud.product import get_product, get_products, create_product, delete_product
-from services.auth_admin_service import get_current_admin
+from app.schemas.product import ProductRead, ProductCreate
+from app.models.admin import Admin
+from app.config.database import get_db
+from app.crud.product import get_product, get_products, create_product, delete_product
+from app.services.auth_admin_service import get_current_admin
 import os
 import shutil
 

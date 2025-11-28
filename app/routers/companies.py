@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from crud.company import get_company, get_companies, create_company, update_company, delete_company
-from schemas.company import CompanyRead, CompanyCreate, CompanyUpdate
-from models.admin import Admin
-from config.database import get_db
-from services import auth_admin_service
+from app.crud.company import get_company, get_companies, create_company, update_company, delete_company
+from app.schemas.company import CompanyRead, CompanyCreate, CompanyUpdate
+from app.models.admin import Admin
+from app.config.database import get_db
+from app.services import auth_admin_service
 
 router = APIRouter(tags=["Companies"])
 

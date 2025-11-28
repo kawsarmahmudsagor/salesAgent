@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from shutil import rmtree
 from pathlib import Path
-from helpers.convert_to_text import convert_to_txt
+from app.helpers.convert_to_text import convert_to_txt
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings

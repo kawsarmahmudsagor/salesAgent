@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
-from product import ProductRead
+from app.schemas.product import ProductRead
+
 
 class InventoryBase(BaseModel):
     product_id: int

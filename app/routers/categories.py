@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from crud.category import get_categories, get_category, update_category, delete_category, create_category
-from schemas.category import CategoryRead, CategoryUpdate, CategoryCreate
-from config.database import get_db
-from models.admin import Admin
-from services.auth_admin_service import get_current_admin
+from app.crud.category import get_categories, get_category, update_category, delete_category, create_category
+from app.schemas.category import CategoryRead, CategoryUpdate, CategoryCreate
+from app.config.database import get_db
+from app.models.admin import Admin
+from app.services.auth_admin_service import get_current_admin
 
 router = APIRouter(tags=["Categories"])
 

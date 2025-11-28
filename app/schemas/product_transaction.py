@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
-from transaction_type import TrnTypeEnum
+from app.schemas.transaction_type import TrnTypeEnum
 
 class ProductTransactionBase(BaseModel):
     order_id: Optional[int]

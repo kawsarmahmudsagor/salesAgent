@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from config.database import get_db
-from services.auth_admin_service import get_current_admin
-from services.auth_user_service import get_current_user
-from services.chatbot_service import handle_conversation
-from models.user import User
-from models.admin import Admin
-from models.conversation_history import ConversationHistory
-from services import auth_admin_service, auth_user_service
-from schemas.chatmodel import ChatRequest
+from app.config.database import get_db
+from app.services.auth_admin_service import get_current_admin
+from app.services.auth_user_service import get_current_user
+from app.services.chatbot_service import handle_conversation
+from app.models.user import User
+from app.models.admin import Admin
+from app.models.conversation_history import ConversationHistory
+from app.services import auth_admin_service, auth_user_service
+from app.schemas.chatmodel import ChatRequest
 
 
 router = APIRouter(tags=["Chatbot"])

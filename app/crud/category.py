@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models.category import Category
-from schemas.category import CategoryCreate, CategoryUpdate
+from app.models.category import Category
+from app.schemas.category import CategoryCreate, CategoryUpdate
 
 def get_category(db: Session, category_id: int):
     return db.query(Category).filter(Category.id == category_id).first()

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models.product_transaction import ProductTransaction
-from schemas.transaction_type import TrnTypeEnum
+from app.models.product_transaction import ProductTransaction
+from app.schemas.transaction_type import TrnTypeEnum
 from typing import List, Optional
 
 def create_transaction(db: Session, user_id: int, order_id: int, trn_amount: float, created_by: str):

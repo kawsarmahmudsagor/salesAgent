@@ -3,11 +3,11 @@ from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
 from pathlib import Path
 from typing import List
-from crud.document import get_documents, delete_document, create_document
-from models.admin import Admin
-from schemas.document import DocumentCreate, DocumentRead
-from services import ai_summarizer_service, auth_admin_service
-from config.database import get_db
+from app.crud.document import get_documents, delete_document, create_document
+from app.models.admin import Admin
+from app.schemas.document import DocumentCreate, DocumentRead
+from app.services import ai_summarizer_service, auth_admin_service
+from app.config.database import get_db
 import os
 import shutil
 import uuid

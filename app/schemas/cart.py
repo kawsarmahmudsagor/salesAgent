@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
-from product import ProductRead
+from app.schemas.product import ProductRead
+
 
 class CartBase(BaseModel):
     user_id: int

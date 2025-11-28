@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models.inventory import Inventory
-from schemas.inventory import InventoryCreate
+from app.models.inventory import Inventory
+from app.schemas.inventory import InventoryCreate
 from typing import List, Optional
 
 def create_inventory(db: Session, inventory: InventoryCreate):

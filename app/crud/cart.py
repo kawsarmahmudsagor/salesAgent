@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models.cart import Cart
+from app.models.cart import Cart
 
 def add_to_cart(db: Session, user_id: int, product_id: int, quantity: int = 1):
     cart_item = Cart(user_id=user_id, product_id=product_id, quantity=quantity)

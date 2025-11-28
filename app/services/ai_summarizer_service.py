@@ -5,7 +5,7 @@ from google import genai
 from dotenv import load_dotenv
 from pathlib import Path
 import os
-from helpers.convert_to_text import convert_to_txt
+from app.helpers.convert_to_text import convert_to_txt
 
 env_path = Path(__file__).resolve().parent / ".env"
 load_dotenv(env_path)

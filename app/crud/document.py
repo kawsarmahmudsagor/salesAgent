@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models.documents import Document
-from schemas.document import DocumentCreate
+from app.models.documents import Document
+from app.schemas.document import DocumentCreate
 from typing import List
 
 

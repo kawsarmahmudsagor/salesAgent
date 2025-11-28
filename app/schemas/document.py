@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import List
-from admin import AdminRead
+from app.schemas.admin import AdminRead
 
 
 class DocumentBase(BaseModel):

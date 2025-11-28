@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models.product_type import ProductType
-from schemas.product_type import ProductTypeCreate, ProductTypeUpdate
+from app.models.product_type import ProductType
+from app.schemas.product_type import ProductTypeCreate, ProductTypeUpdate
 from typing import List, Optional
 
 def get_product_type(db: Session, product_type_id: int):

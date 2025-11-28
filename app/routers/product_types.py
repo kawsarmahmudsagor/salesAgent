@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from config.database import get_db
-from models.admin import Admin
-from schemas.product_type import ProductTypeRead, ProductTypeUpdate, ProductTypeCreate
-from crud.product_type import get_product_type, get_product_types, create_product_type, delete_product_type
-from services.auth_admin_service import get_current_admin
+from app.config.database import get_db
+from app.models.admin import Admin
+from app.schemas.product_type import ProductTypeRead, ProductTypeUpdate, ProductTypeCreate
+from app.crud.product_type import get_product_type, get_product_types, create_product_type, delete_product_type
+from app.services.auth_admin_service import get_current_admin
 
 router = APIRouter(tags=["Product-Types"])
 

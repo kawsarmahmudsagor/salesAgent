@@ -1,7 +1,7 @@
 from langchain.chat_models import init_chat_model
 from langchain_core.prompts import ChatPromptTemplate
 from dotenv import load_dotenv
-from rag_service import get_rag_context
+from app.services.rag_service import get_rag_context
 import os
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))

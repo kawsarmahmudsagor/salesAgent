@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Float, ForeignKey, Text, DateTim
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.config.database import Base
-from transaction import TrnTypeEnum
+from app.schemas.transaction_type import TrnTypeEnum
 
 class ProductTransaction(Base):
     __tablename__ = "product_transactions"

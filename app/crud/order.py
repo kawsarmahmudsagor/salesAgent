@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from models.order import Order
-from models.order_item import OrderItem
-from models.cart import Cart
+from app.models.order import Order
+from app.models.order_item import OrderItem
+from app.models.cart import Cart
 from typing import List, Optional
 
 

@@ -2,13 +2,13 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from crud.inventory import create_inventory, list_inventory_for_product, delete_inventory
-from crud.product import get_product
-from models.inventory import Inventory
-from models.admin import Admin
-from schemas.inventory import InventoryRead, InventoryDeleteRead, InventoryCreate
-from config.database import get_db
-from services.auth_admin_service import get_current_admin
+from app.crud.inventory import create_inventory, list_inventory_for_product, delete_inventory
+from app.crud.product import get_product
+from app.models.inventory import Inventory
+from app.models.admin import Admin
+from app.schemas.inventory import InventoryRead, InventoryDeleteRead, InventoryCreate
+from app.config.database import get_db
+from app.services.auth_admin_service import get_current_admin
 
 
 router = APIRouter(tags=["inventory"])
